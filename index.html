@@ -3,198 +3,96 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arabesque Tracker</title>
+<title>Arabesque Stopwatch</title>
 <style>
   body {
     margin: 0;
     font-family: Georgia, serif;
-    background: linear-gradient(135deg, #0d0b1d, #1b1325);
-    color: #c6b8d8;
+    background: #000;
+    color: #fdf6e3; /* ivory */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 100vh;
+    height: 100vh;
   }
 
   h1 {
     font-family: "Lucida Calligraphy", Georgia, serif;
-    font-weight: normal;
-    font-size: 2.4rem;
-    letter-spacing: 1.5px;
-    margin-bottom: 30px;
-    color: #b79edc;
-    text-shadow: 0 0 8px rgba(183,158,220,0.6);
+    font-size: 2.5rem;
+    margin-bottom: 50px;
+    color: #fdf6e3;
+    text-shadow: 0 0 8px rgba(255,255,255,0.4);
   }
 
-  .tracker {
-    background: rgba(25,18,40,0.9);
-    padding: 35px 40px;
-    border-radius: 25px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-    width: 100%;
-    max-width: 400px;
-    border: 1px solid rgba(183,158,220,0.3);
-    position: relative;
-    overflow: hidden;
-  }
-
-  label {
-    display: block;
-    margin: 12px 0 5px;
-    font-weight: 600;
-    font-size: 1rem;
-    color: #c6b8d8;
-  }
-
-  input[type="number"] {
-    width: 100%;
-    padding: 10px 12px;
-    border-radius: 12px;
-    border: none;
-    background: rgba(255,255,255,0.03);
-    color: #d8cfe6;
-    font-size: 1rem;
-    outline: none;
-  }
-
-  input[type="number"]::placeholder {
-    color: rgba(214,202,229,0.5);
-  }
-
-  button {
-    margin-top: 20px;
-    width: 100%;
-    padding: 12px;
-    border-radius: 20px;
-    border: 1px solid #b79edc;
+  #stopwatchBtn {
+    padding: 20px 50px;
+    font-size: 1.5rem;
+    border-radius: 50px;
+    border: 2px solid #b22222; /* deep red */
     background: transparent;
-    color: #b79edc;
-    font-weight: 600;
-    font-size: 1rem;
+    color: #fdf6e3;
     cursor: pointer;
     transition: 0.3s;
+    box-shadow: 0 0 15px rgba(178,34,34,0.4);
   }
 
-  button:hover {
-    background: rgba(183,158,220,0.15);
+  #stopwatchBtn:hover {
+    background: rgba(178,34,34,0.15);
   }
 
-  .progress-container {
-    margin-top: 25px;
-    background: rgba(255,255,255,0.03);
-    border-radius: 20px;
-    height: 30px;
-    width: 100%;
-    overflow: hidden;
-    border: 1px solid rgba(183,158,220,0.3);
-    box-shadow: inset 0 0 8px rgba(183,158,220,0.1);
-  }
-
-  .progress-bar {
-    height: 100%;
-    width: 0;
-    background: linear-gradient(90deg, rgba(183,158,220,0.8), rgba(214,202,229,0.6));
-    border-radius: 20px 0 0 20px;
-    transition: width 0.5s ease;
-    text-align: center;
-    color: #1b1325;
-    font-weight: 600;
-    line-height: 30px;
-    font-size: 0.9rem;
-    box-shadow: 0 0 10px rgba(214,202,229,0.3);
-  }
-
-  .reset {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(183,158,220,0.3);
-    color: #b79edc;
-    margin-top: 12px;
-  }
-
-  .reset:hover {
-    background: rgba(183,158,220,0.1);
-  }
-
-  .tracker::before {
-    content: '';
-    position: absolute;
-    width: 200%;
-    height: 200%;
-    top: -50%;
-    left: -50%;
-    background: radial-gradient(circle at center, rgba(214,202,229,0.03) 0%, transparent 70%);
-    transform: rotate(45deg);
-    pointer-events: none;
+  #timeDisplay {
+    margin-top: 50px;
+    font-size: 3rem;
+    color: #fdf6e3;
+    font-family: "Lucida Calligraphy", Georgia, serif;
+    text-shadow: 0 0 10px rgba(255,255,255,0.3);
   }
 </style>
 </head>
 <body>
 
-<h1>Arabesque Tracker</h1>
-<div class="tracker">
-  <label for="hours">Hours spent today</label>
-  <input type="number" id="hours" min="0" max="24" placeholder="e.g., 3">
-
-  <label for="goal">Daily goal (hours)</label>
-  <input type="number" id="goal" min="1" max="24" value="4">
-
-  <button id="sessionBtn" onclick="toggleSession()">Start Session</button>
-  <button onclick="updateProgress()">Track Time</button>
-  <button class="reset" onclick="resetTracker()">Reset</button>
-
-  <div class="progress-container">
-    <div class="progress-bar" id="progressBar">0%</div>
-  </div>
-</div>
+<h1>Arabesque Stopwatch</h1>
+<button id="stopwatchBtn">Start</button>
+<div id="timeDisplay">00:00:00</div>
 
 <script>
-let sessionStart = null;
-let sessionRunning = false;
+let startTime = null;
+let timerInterval = null;
+let running = false;
 
-function toggleSession() {
-  const btn = document.getElementById('sessionBtn');
-  const hoursInput = document.getElementById('hours');
+const btn = document.getElementById('stopwatchBtn');
+const display = document.getElementById('timeDisplay');
 
-  if (!sessionRunning) {
-    sessionStart = new Date();
-    sessionRunning = true;
-    btn.textContent = "End Session";
+function formatTime(ms) {
+  const totalSeconds = Math.floor(ms / 1000);
+  const hours = String(Math.floor(totalSeconds / 3600)).padStart(2,'0');
+  const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2,'0');
+  const seconds = String(totalSeconds % 60).padStart(2,'0');
+  return `${hours}:${minutes}:${seconds}`;
+}
+
+function updateDisplay() {
+  const now = new Date();
+  const elapsed = now - startTime;
+  display.textContent = formatTime(elapsed);
+}
+
+btn.addEventListener('click', () => {
+  if (!running) {
+    // Start session
+    startTime = new Date();
+    timerInterval = setInterval(updateDisplay, 1000);
+    btn.textContent = "Stop";
+    running = true;
   } else {
-    const sessionEnd = new Date();
-    const elapsedMs = sessionEnd - sessionStart;
-    const elapsedHours = elapsedMs / (1000 * 60 * 60); // convert to hours
-
-    const currentHours = parseFloat(hoursInput.value) || 0;
-    hoursInput.value = (currentHours + elapsedHours).toFixed(2);
-
-    sessionRunning = false;
-    sessionStart = null;
-    btn.textContent = "Start Session";
-
-    updateProgress();
+    // Stop session
+    clearInterval(timerInterval);
+    updateDisplay();
+    btn.textContent = "Start";
+    running = false;
   }
-}
-
-function updateProgress() {
-  const hours = parseFloat(document.getElementById('hours').value) || 0;
-  const goal = parseFloat(document.getElementById('goal').value) || 1;
-  let percent = Math.min((hours / goal) * 100, 100);
-  const progressBar = document.getElementById('progressBar');
-  progressBar.style.width = percent + '%';
-  progressBar.textContent = Math.round(percent) + '%';
-}
-
-function resetTracker() {
-  document.getElementById('hours').value = '';
-  document.getElementById('progressBar').style.width = '0%';
-  document.getElementById('progressBar').textContent = '0%';
-  if(sessionRunning) {
-    sessionRunning = false;
-    sessionStart = null;
-    document.getElementById('sessionBtn').textContent = "Start Session";
-  }
-}
+});
 </script>
 
 </body>
