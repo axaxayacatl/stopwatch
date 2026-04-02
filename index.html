@@ -9,33 +9,58 @@
     margin: 0;
     font-family: Georgia, serif;
     background: #000;
-    color: #fdf6e3; /* ivory */
+    color: #fdf6e3;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 100vh;
+    overflow: hidden;
   }
 
   h1 {
     font-family: "Lucida Calligraphy", Georgia, serif;
     font-size: 2.5rem;
-    margin-bottom: 50px;
+    margin-bottom: 40px;
     color: #fdf6e3;
     text-shadow: 0 0 8px rgba(255,255,255,0.4);
+    position: relative;
   }
+
+  h1::before, h1::after {
+    content: "❦";
+    font-size: 2rem;
+    color: #b22222;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  h1::before { left: -35px; }
+  h1::after { right: -35px; }
 
   #stopwatchBtn {
     padding: 20px 50px;
     font-size: 1.5rem;
     border-radius: 50px;
-    border: 2px solid #b22222; /* deep red */
+    border: 2px solid #b22222;
     background: transparent;
     color: #fdf6e3;
     cursor: pointer;
     transition: 0.3s;
     box-shadow: 0 0 15px rgba(178,34,34,0.4);
+    position: relative;
   }
+
+  #stopwatchBtn::before, #stopwatchBtn::after {
+    content: "✵";
+    position: absolute;
+    font-size: 1.2rem;
+    color: #b22222;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  #stopwatchBtn::before { left: 10px; }
+  #stopwatchBtn::after { right: 10px; }
 
   #stopwatchBtn:hover {
     background: rgba(178,34,34,0.15);
@@ -47,7 +72,19 @@
     color: #fdf6e3;
     font-family: "Lucida Calligraphy", Georgia, serif;
     text-shadow: 0 0 10px rgba(255,255,255,0.3);
+    position: relative;
   }
+
+  #timeDisplay::before, #timeDisplay::after {
+    content: "❧";
+    color: #b22222;
+    font-size: 1.5rem;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  #timeDisplay::before { left: -30px; }
+  #timeDisplay::after { right: -30px; }
 </style>
 </head>
 <body>
@@ -80,13 +117,11 @@ function updateDisplay() {
 
 btn.addEventListener('click', () => {
   if (!running) {
-    // Start session
     startTime = new Date();
     timerInterval = setInterval(updateDisplay, 1000);
     btn.textContent = "Stop";
     running = true;
   } else {
-    // Stop session
     clearInterval(timerInterval);
     updateDisplay();
     btn.textContent = "Start";
@@ -97,3 +132,4 @@ btn.addEventListener('click', () => {
 
 </body>
 </html>
+
