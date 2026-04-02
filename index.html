@@ -5,79 +5,80 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Arabesque Stopwatch</title>
 <style>
+  
   body {
     margin: 0;
     font-family: Georgia, serif;
-    background: #000;
-    color: #fdf6e3;
+    background: #fdf6e3; /* ivory background */
+    color: #000; /* black text */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 100vh;
     overflow: hidden;
-  }
-
-  h1 {
-    font-family: "Lucida Calligraphy", Georgia, serif;
-    font-size: 2.5rem;
-    margin-bottom: 40px;
-    color: #fdf6e3;
-    text-shadow: 0 0 8px rgba(255,255,255,0.4);
     position: relative;
   }
 
-  h1::before, h1::after {
-    content: "❦";
-    font-size: 2rem;
-    color: #b22222;
+  body::before, body::after {
+    content: "";
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+    width: 100%;
+    height: 100%;
+    background-image: 
+      radial-gradient(circle at 20% 20%, rgba(0,0,0,0.05) 2%, transparent 0),
+      radial-gradient(circle at 80% 80%, rgba(0,0,0,0.05) 2%, transparent 0),
+      radial-gradient(circle at 50% 50%, rgba(0,0,0,0.03) 3%, transparent 0);
+    background-repeat: repeat;
+    z-index: 0;
   }
-  h1::before { left: -35px; }
-  h1::after { right: -35px; }
 
-  #stopwatchBtn {
+  #stopwatchBtn, #resetBtn {
     padding: 20px 50px;
     font-size: 1.5rem;
     border-radius: 50px;
-    border: 2px solid #b22222;
+    border: 2px solid #000; /* black border */
     background: transparent;
-    color: #fdf6e3;
+    color: #000; /* black text */
     cursor: pointer;
     transition: 0.3s;
-    box-shadow: 0 0 15px rgba(178,34,34,0.4);
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    margin: 10px 0;
+    z-index: 1;
     position: relative;
   }
 
-  #stopwatchBtn::before, #stopwatchBtn::after {
+  #stopwatchBtn:hover, #resetBtn:hover {
+    background: rgba(0,0,0,0.08);
+  }
+
+  #stopwatchBtn::before, #stopwatchBtn::after,
+  #resetBtn::before, #resetBtn::after {
     content: "✵";
     position: absolute;
     font-size: 1.2rem;
-    color: #b22222;
+    color: #000;
     top: 50%;
     transform: translateY(-50%);
   }
   #stopwatchBtn::before { left: 10px; }
   #stopwatchBtn::after { right: 10px; }
-
-  #stopwatchBtn:hover {
-    background: rgba(178,34,34,0.15);
-  }
+  #resetBtn::before { left: 10px; }
+  #resetBtn::after { right: 10px; }
 
   #timeDisplay {
-    margin-top: 50px;
+    margin: 50px 0;
     font-size: 3rem;
-    color: #fdf6e3;
+    color: #000;
     font-family: "Lucida Calligraphy", Georgia, serif;
-    text-shadow: 0 0 10px rgba(255,255,255,0.3);
+    text-shadow: 0 0 8px rgba(0,0,0,0.15);
     position: relative;
+    z-index: 1;
   }
 
   #timeDisplay::before, #timeDisplay::after {
     content: "❧";
-    color: #b22222;
+    color: #000;
     font-size: 1.5rem;
     position: absolute;
     top: 50%;
@@ -89,8 +90,8 @@
 </head>
 <body>
 
-<h1>Arabesque Stopwatch</h1>
 <button id="stopwatchBtn">Start</button>
+<button id="resetBtn">Reset</button>
 <div id="timeDisplay">00:00:00</div>
 
 <script>
@@ -99,6 +100,7 @@ let timerInterval = null;
 let running = false;
 
 const btn = document.getElementById('stopwatchBtn');
+const resetBtn = document.getElementById('resetBtn');
 const display = document.getElementById('timeDisplay');
 
 function formatTime(ms) {
@@ -128,8 +130,14 @@ btn.addEventListener('click', () => {
     running = false;
   }
 });
+
+resetBtn.addEventListener('click', () => {
+  clearInterval(timerInterval);
+  display.textContent = "00:00:00";
+  running = false;
+  btn.textContent = "Start";
+});
 </script>
 
 </body>
 </html>
-
