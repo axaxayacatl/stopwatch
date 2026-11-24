@@ -1,81 +1,263 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>arabesque</title>
+<title>ARABESQUE // KINETIC TIMEKEEPER</title>
+
 <style>
-  body {
-    margin: 0;
-    font-family: Georgia, serif;
-    background: #fdf6e3;
-    color: #000;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
+@import url('https://fonts.googleapis.com/css2?family=Italiana&family=Jost:wght@300;400;500&family=Orbitron:wght@400;500;600&display=swap');
+
+:root {
+  --pink: #efb5d5;
+  --rose: #ce8eaf;
+  --silver: #c9bdce;
+  --ink: #69536d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at center,
+      #ffffff 0%,
+      #fff8fd 45%,
+      #f0e5f1 100%);
+  color: var(--ink);
+  font-family: 'Jost', sans-serif;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: .18;
+  background-image:
+    linear-gradient(rgba(176,145,177,.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(176,145,177,.12) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse, black, transparent 85%);
+}
+
+.interface {
+  position: relative;
+  width: min(92vw, 410px);
+  padding: 30px 24px 25px;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,.95);
+  background: rgba(255,252,255,.75);
+  backdrop-filter: blur(20px);
+  box-shadow:
+    0 20px 65px rgba(118,82,119,.12),
+    inset 0 0 30px rgba(255,255,255,.9);
+}
+
+.interface::before,
+.interface::after {
+  content: "";
+  position: absolute;
+  width: 23px;
+  height: 23px;
+  border-color: var(--rose);
+  border-style: solid;
+  opacity: .65;
+}
+
+.interface::before {
+  top: 9px;
+  left: 9px;
+  border-width: 1px 0 0 1px;
+}
+
+.interface::after {
+  bottom: 9px;
+  right: 9px;
+  border-width: 0 1px 1px 0;
+}
+
+.serial {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 8px;
+  letter-spacing: 4px;
+  color: var(--rose);
+  margin-bottom: 8px;
+}
+
+h1 {
+  font-family: 'Italiana', serif;
+  font-weight: 400;
+  font-size: 49px;
+  letter-spacing: 8px;
+  margin: 0;
+  color: #765b78;
+}
+
+.subtitle {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 7px;
+  letter-spacing: 3px;
+  color: #aa8da8;
+  margin-top: 4px;
+}
+
+.timer-frame {
+  position: relative;
+  width: 100%;
+  margin: 24px auto 20px;
+  padding: 23px 8px 20px;
+  border-top: 1px solid rgba(206,142,175,.45);
+  border-bottom: 1px solid rgba(206,142,175,.45);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(244,214,235,.23),
+    transparent
+  );
+}
+
+.timer-frame::before,
+.timer-frame::after {
+  content: "✧";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--rose);
+  font-size: 17px;
+}
+
+.timer-frame::before {
+  left: 7px;
+}
+
+.timer-frame::after {
+  right: 7px;
+}
+
+.time-label {
+  font-size: 8px;
+  letter-spacing: 4px;
+  color: #b18ba9;
+  margin-bottom: 12px;
+}
+
+#timeDisplay {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(29px, 8vw, 39px);
+  font-weight: 400;
+  letter-spacing: 3px;
+  color: #68536d;
+  text-shadow: 0 0 16px rgba(215,142,182,.3);
+  font-variant-numeric: tabular-nums;
+  margin: 0;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+button {
+  min-width: 112px;
+  padding: 13px 17px;
+  border: 1px solid #d9b2cd;
+  background: rgba(255,255,255,.7);
+  color: #765b78;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 9px;
+  letter-spacing: 3px;
+  cursor: pointer;
+  transition: .3s ease;
+}
+
+button:hover {
+  background: #f4d8e9;
+  border-color: #c783ad;
+  box-shadow: 0 0 18px rgba(215,142,182,.3);
+  transform: translateY(-2px);
+}
+
+#stopwatchBtn {
+  background: linear-gradient(135deg, #f8e2ef, #f0c9df);
+  border-color: #d9a4c6;
+}
+
+.footer {
+  margin-top: 22px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 7px;
+  letter-spacing: 2px;
+  color: #b69bb3;
+}
+
+.status {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  background: #d78eb6;
+  border-radius: 50%;
+  margin-right: 7px;
+  box-shadow: 0 0 8px #d78eb6;
+}
+
+@media(max-width: 380px) {
+  .interface {
+    padding: 25px 15px 22px;
   }
 
-  #stopwatchBtn, #resetBtn {
-    padding: 20px 50px;
-    font-size: 1.5rem;
-    border-radius: 50px;
-    border: 2px solid #000;
-    background: transparent;
-    color: #000;
-    cursor: pointer;
-    transition: 0.3s;
-    margin: 10px 0;
-    position: relative;
+  h1 {
+    font-size: 42px;
   }
 
-  #stopwatchBtn:hover, #resetBtn:hover {
-    background: rgba(0,0,0,0.08);
+  button {
+    min-width: 100px;
   }
-
-  #stopwatchBtn::before, #stopwatchBtn::after,
-  #resetBtn::before, #resetBtn::after {
-    content: "✵";
-    position: absolute;
-    font-size: 1.2rem;
-    color: #000;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-  #stopwatchBtn::before { left: 10px; }
-  #stopwatchBtn::after { right: 10px; }
-  #resetBtn::before { left: 10px; }
-  #resetBtn::after { right: 10px; }
-
-  #timeDisplay {
-    margin: 50px 0;
-    font-size: 3rem;
-    color: #000;
-    font-family: "Lucida Calligraphy", Georgia, serif;
-    text-shadow: 0 0 8px rgba(0,0,0,0.15);
-    position: relative;
-  }
-
-  #timeDisplay::before, #timeDisplay::after {
-    content: "❧";
-    color: #000;
-    font-size: 1.5rem;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-  #timeDisplay::before { left: -30px; }
-  #timeDisplay::after { right: -30px; }
+}
 </style>
 </head>
+
 <body>
 
-<button id="stopwatchBtn">Start</button>
-<button id="resetBtn">Reset</button>
-<div id="timeDisplay">00:00:00</div>
+<main class="interface">
+
+  <div class="serial">A X A // MOVEMENT SYSTEMS</div>
+
+  <h1>ARABESQUE</h1>
+
+  <div class="subtitle">KINETIC TIMEKEEPER · 001</div>
+
+  <section class="timer-frame">
+
+    <div class="time-label">ELAPSED PERFORMANCE TIME</div>
+
+    <div id="timeDisplay">00:00:00</div>
+
+  </section>
+
+  <div class="controls">
+    <button id="stopwatchBtn">START</button>
+    <button id="resetBtn">RESET</button>
+  </div>
+
+  <div class="footer">
+    <span class="status"></span>
+    SYSTEM READY // ORBITAL MOTION
+  </div>
+
+</main>
 
 <script>
+let elapsed = 0;
 let startTime = null;
 let timerInterval = null;
 let running = false;
@@ -86,40 +268,68 @@ const display = document.getElementById('timeDisplay');
 
 function formatTime(ms) {
   const totalSeconds = Math.floor(ms / 1000);
-  const hours = String(Math.floor(totalSeconds / 3600)).padStart(2,'0');
-  const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2,'0');
-  const seconds = String(totalSeconds % 60).padStart(2,'0');
+
+  const hours = String(
+    Math.floor(totalSeconds / 3600)
+  ).padStart(2, '0');
+
+  const minutes = String(
+    Math.floor((totalSeconds % 3600) / 60)
+  ).padStart(2, '0');
+
+  const seconds = String(
+    totalSeconds % 60
+  ).padStart(2, '0');
+
   return `${hours}:${minutes}:${seconds}`;
 }
 
 function updateDisplay() {
-  const now = new Date();
-  const elapsed = now - startTime;
-  display.textContent = formatTime(elapsed);
+  const currentElapsed = elapsed + (Date.now() - startTime);
+  display.textContent = formatTime(currentElapsed);
 }
 
 btn.addEventListener('click', () => {
+
   if (!running) {
-    startTime = new Date();
-    timerInterval = setInterval(updateDisplay, 1000);
-    btn.textContent = "Stop";
+
+    startTime = Date.now();
+
+    timerInterval = setInterval(updateDisplay, 100);
+
+    btn.textContent = 'PAUSE';
     running = true;
+
   } else {
+
+    elapsed += Date.now() - startTime;
+
     clearInterval(timerInterval);
-    updateDisplay();
-    btn.textContent = "Start";
+
+    display.textContent = formatTime(elapsed);
+
+    btn.textContent = 'START';
     running = false;
   }
+
 });
 
 resetBtn.addEventListener('click', () => {
+
   clearInterval(timerInterval);
-  display.textContent = "00:00:00";
+
+  elapsed = 0;
+  startTime = null;
   running = false;
-  btn.textContent = "Start";
+
+  display.textContent = '00:00:00';
+  btn.textContent = 'START';
+
 });
+
 </script>
 
 </body>
 </html>
+
 
